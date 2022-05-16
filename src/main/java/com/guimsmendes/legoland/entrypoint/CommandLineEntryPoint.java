@@ -2,6 +2,7 @@ package com.guimsmendes.legoland.entrypoint;
 
 import com.guimsmendes.legoland.domain.Profit;
 import com.guimsmendes.legoland.domain.Sawmill;
+import com.guimsmendes.legoland.entrypoint.exception.EntryPointException;
 import com.guimsmendes.legoland.usecase.SawmillUseCase;
 
 import java.io.BufferedReader;
@@ -33,7 +34,7 @@ public class CommandLineEntryPoint {
                         try {
                             return bufferedReader.readLine();
                         } catch (IOException ex) {
-                            throw new RuntimeException("Unable to read line from buffered reader. " + ex);
+                            throw new EntryPointException.ReadLineException("Unable to read line from buffered reader. " + ex);
                         }
                     })
                     .collect(toList());
