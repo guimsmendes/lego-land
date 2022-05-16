@@ -1,6 +1,7 @@
 package com.guimsmendes.legoland.entrypoint;
 
 import com.guimsmendes.legoland.domain.Profit;
+import com.guimsmendes.legoland.domain.Sawmill;
 import com.guimsmendes.legoland.usecase.SawmillUseCase;
 
 import java.io.BufferedReader;
@@ -32,14 +33,14 @@ public class CommandLineEntryPoint {
                         try {
                             return bufferedReader.readLine();
                         } catch (IOException ex) {
-                            throw new RuntimeException(ex);
+                            throw new RuntimeException("Unable to read line from buffered reader. " + ex);
                         }
                     })
                     .collect(toList());
-            List<List<Integer>> input = line.stream().map(s -> Arrays.stream(s.split(" "))
+            List<Sawmill> input = line.stream().map(s -> Arrays.stream(s.split(" "))
                             .map(CommandLineEntryPoint::parseInt)
                             .collect(toList()))
-                    .map(CommandLineEntryPoint::checkSize)
+                    .map(Sawmill::new)
                     .collect(toList());
             caseNum++;
             if (lineCount != 0) printMaxProfit(caseNum, input);
@@ -61,22 +62,6 @@ public class CommandLineEntryPoint {
     }
 
     /**
-     * <p>Checks if the first argument that represents the size of the tree trunks are equal the size of them.
-     * Returns the list of tree trunks length.</p>
-     *
-     * @param      list   a List of Integer object representing in the first argument the size of the tree trunks and the
-     * other arguments the length of each tree trunk.
-     * @return     a List of Integer object representing the length of each tree trunk.
-     * @throws     IllegalArgumentException if the size of the tree trunks is different from the first argument.
-     */
-    private static List<Integer> checkSize(List<Integer> list) {
-        if (list.size() - 1 != list.get(0))
-            throw new IllegalArgumentException("The first argument should match the number of tree trunks.");
-        list.remove(0);
-        return list;
-    }
-
-    /**
      * <p>Calculates the max profit for the given input
      * and prints it to the console.</p>
      *
@@ -84,28 +69,29 @@ public class CommandLineEntryPoint {
      * @param      input a List representing multiple rivers containing in each one
      * a List of Integer representing each tree trunk lengths.
      */
-    private static void printMaxProfit(int caseNum, List<List<Integer>> input) {
-        List<Profit> profitList = SawmillUseCase.getMaxProfitList(input);
+    private static void printMaxProfit(int caseNum, List<Sawmill> input) {
+        input = SawmillUseCase.getMaxProfitList(input);
 
-        int totalMaxProfit = profitList.stream()
+        int totalMaxProfit = input.stream()
+                .map(Sawmill::getMaxProfit)
                 .map(Profit::getValue)
                 .reduce(0, Integer::sum);
 
         System.out.println("Case " + caseNum);
         System.out.println("Max profit: " + totalMaxProfit);
         System.out.print("Order: ");
-        printOrderList(profitList);
+        printOrderList(input);
     }
 
     /**
      * <p>Prints each of the order set for the given input.</p>
      *
-     * @param      profitList   a List of Profit object containing, for each Profit object,
+     * @param      sawmillList   a List of Profit object containing, for each Profit object,
      * the max profit calculated and the order sets to achieve the max profit.
      */
-    private static void printOrderList(List<Profit> profitList) {
-        for (int i = 0; i < profitList.size(); i++) {
-            for (List<Integer> order : profitList.get(i).getOrderList()) {
+    private static void printOrderList(List<Sawmill> sawmillList) {
+        for (int i = 0; i < sawmillList.size(); i++) {
+            for (List<Integer> order : sawmillList.get(i).getMaxProfit().getOrderList()) {
                 System.out.print("[");
                 for (int j = 0; j < order.size(); j++) {
                     System.out.print(order.get(j));
@@ -113,7 +99,7 @@ public class CommandLineEntryPoint {
                 }
                 System.out.print("]");
             }
-            if (i < profitList.size() - 1) System.out.print(", ");
+            if (i < sawmillList.size() - 1) System.out.print(", ");
 
         }
         System.out.println();

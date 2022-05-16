@@ -1,6 +1,7 @@
 package com.guimsmendes.legoland.unit;
 
 import com.guimsmendes.legoland.domain.Profit;
+import com.guimsmendes.legoland.domain.Sawmill;
 import com.guimsmendes.legoland.usecase.SawmillUseCase;
 import org.junit.jupiter.api.Test;
 
@@ -17,16 +18,17 @@ public class SawmillUseCaseTest {
      */
     @Test
     void oneSawmillTest(){
-        Integer[] treeVector = new Integer[]{2,3,1};
-        List<Integer> trees = Arrays.asList(treeVector);
-        List<List<Integer>> totalTrees = new ArrayList<>();
-        totalTrees.add(trees);
+        Integer[] treeVector = new Integer[]{3,2,3,1};
+        List<Integer> trees = new ArrayList<Integer>(Arrays.asList(treeVector));
+        Sawmill sawmill = new Sawmill(trees);
+        List<Sawmill> totalSawmills = new ArrayList<>();
+        totalSawmills.add(sawmill);
 
-        List<Profit> profitList = SawmillUseCase.getMaxProfitList(totalTrees);
+        List<Sawmill> sawmillList = SawmillUseCase.getMaxProfitList(totalSawmills);
 
-        assertEquals(1, profitList.size());
-        assertEquals(4, profitList.get(0).getValue());
-        assertEquals(2, profitList.get(0).getOrderList().size());
+        assertEquals(1, sawmillList.size());
+        assertEquals(4, sawmillList.get(0).getMaxProfit().getValue());
+        assertEquals(2, sawmillList.get(0).getMaxProfit().getOrderList().size());
     }
 
     /**
@@ -35,16 +37,17 @@ public class SawmillUseCaseTest {
      */
     @Test
     void longerSizeSawmillTest(){
-        Integer[] treeVector = new Integer[]{1,9,1};
-        List<Integer> trees = Arrays.asList(treeVector);
-        List<List<Integer>> totalTrees = new ArrayList<>();
-        totalTrees.add(trees);
+        Integer[] treeVector = new Integer[]{3,1,9,1};
+        List<Integer> trees = new ArrayList<Integer>(Arrays.asList(treeVector));
+        Sawmill sawmill = new Sawmill(trees);
+        List<Sawmill> totalSawmills = new ArrayList<>();
+        totalSawmills.add(sawmill);
 
-        List<Profit> profitList = SawmillUseCase.getMaxProfitList(totalTrees);
+        List<Sawmill> sawmillList = SawmillUseCase.getMaxProfitList(totalSawmills);
 
-        assertEquals(1, profitList.size());
-        assertEquals(2, profitList.get(0).getValue());
-        assertEquals(2, profitList.get(0).getOrderList().size());
+        assertEquals(1, sawmillList.size());
+        assertEquals(2, sawmillList.get(0).getMaxProfit().getValue());
+        assertEquals(2, sawmillList.get(0).getMaxProfit().getOrderList().size());
     }
 
     /**
@@ -52,15 +55,15 @@ public class SawmillUseCaseTest {
      */
     @Test
     void multipleSawmillsTest(){
-        List<Profit> profitList = SawmillUseCase.getMaxProfitList(mockMultipleSawmillTrees());
+        List<Sawmill> sawmillList =  SawmillUseCase.getMaxProfitList(mockMultipleSawmillTrees());
 
-        assertEquals(3, profitList.size());
-        assertEquals(1, profitList.get(0).getValue());
-        assertEquals(2, profitList.get(0).getOrderList().size());
-        assertEquals(2, profitList.get(1).getValue());
-        assertEquals(2, profitList.get(1).getOrderList().size());
-        assertEquals(5, profitList.get(2).getValue());
-        assertEquals(1, profitList.get(2).getOrderList().size());
+        assertEquals(3, sawmillList.size());
+        assertEquals(1, sawmillList.get(0).getMaxProfit().getValue());
+        assertEquals(2, sawmillList.get(0).getMaxProfit().getOrderList().size());
+        assertEquals(2, sawmillList.get(1).getMaxProfit().getValue());
+        assertEquals(2, sawmillList.get(1).getMaxProfit().getOrderList().size());
+        assertEquals(5, sawmillList.get(2).getMaxProfit().getValue());
+        assertEquals(1, sawmillList.get(2).getMaxProfit().getOrderList().size());
 
     }
 
@@ -69,33 +72,37 @@ public class SawmillUseCaseTest {
      */
     @Test
     void greatSizeMultipleSawmillsTest(){
-        Integer[] treeVector = new Integer[]{1,2,1,3,4,5,1,2,1};
-        List<Integer> trees = Arrays.asList(treeVector);
-        List<List<Integer>> totalTrees = new ArrayList<>();
-        totalTrees.add(trees);
+        Integer[] treeVector = new Integer[]{9,1,2,1,3,4,5,1,2,1};
+        List<Integer> trees = new ArrayList<Integer>(Arrays.asList(treeVector));
+        Sawmill sawmill = new Sawmill(trees);
+        List<Sawmill> totalSawmills = new ArrayList<>();
+        totalSawmills.add(sawmill);
 
-        List<Profit> profitList = SawmillUseCase.getMaxProfitList(totalTrees);
+        List<Sawmill> sawmillList = SawmillUseCase.getMaxProfitList(totalSawmills);
 
-        assertEquals(1, profitList.size());
-        assertEquals(14, profitList.get(0).getValue());
-        assertEquals(300, profitList.get(0).getOrderList().size());
+        assertEquals(1, sawmillList.size());
+        assertEquals(14, sawmillList.get(0).getMaxProfit().getValue());
+        assertEquals(300, sawmillList.get(0).getMaxProfit().getOrderList().size());
     }
 
     /**
      * <p>Method to mock the multiple inputs for a multiple sawmill.</p>
      */
-    private List<List<Integer>> mockMultipleSawmillTrees(){
-        Integer[] treeVector = new Integer[]{1,2,1};
-        List<Integer> trees = Arrays.asList(treeVector);
-        List<List<Integer>> totalTrees = new ArrayList<>();
-        totalTrees.add(trees);
-        treeVector = new Integer[]{1,2};
-        trees = Arrays.asList(treeVector);
-        totalTrees.add(trees);
-        treeVector = new Integer[]{1,4};
-        trees = Arrays.asList(treeVector);
-        totalTrees.add(trees);
-        return totalTrees;
+    private List<Sawmill> mockMultipleSawmillTrees(){
+        Integer[] treeVector = new Integer[]{3,1,2,1};
+        List<Integer> trees = new ArrayList<Integer>(Arrays.asList(treeVector));
+        Sawmill sawmill = new Sawmill(trees);
+        List<Sawmill> totalSawmills = new ArrayList<>();
+        totalSawmills.add(sawmill);
+        treeVector = new Integer[]{2,1,2};
+        trees = new ArrayList<Integer>(Arrays.asList(treeVector));
+        Sawmill sawmill2 = new Sawmill(trees);
+        totalSawmills.add(sawmill2);
+        treeVector = new Integer[]{2,1,4};
+        trees = new ArrayList<Integer>(Arrays.asList(treeVector));
+        Sawmill sawmill3 = new Sawmill(trees);
+        totalSawmills.add(sawmill3);
+        return totalSawmills;
     }
 
 }
