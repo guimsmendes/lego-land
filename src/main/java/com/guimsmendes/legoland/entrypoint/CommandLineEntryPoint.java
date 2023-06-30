@@ -76,7 +76,6 @@ public class CommandLineEntryPoint {
         return list;
     }
 
-
     /**
      * <p>Calculates the max profit for the given input
      * and prints it to the console.</p>
